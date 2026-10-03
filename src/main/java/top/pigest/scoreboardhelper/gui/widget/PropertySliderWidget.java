@@ -1,17 +1,17 @@
 package top.pigest.scoreboardhelper.gui.widget;
 
-import net.minecraft.client.gui.widget.SliderWidget;
-import net.minecraft.client.option.GameOptions;
-import net.minecraft.text.Text;
+import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
 import top.pigest.scoreboardhelper.config.Property;
 
-public class PropertySliderWidget<T extends Number> extends SliderWidget {
-    private final Text prefix;
+public class PropertySliderWidget<T extends Number> extends AbstractSliderButton {
+    private final Component prefix;
     private final Property<T> property;
     private final ValueTextGetter<T> textGetter;
     private final PropertyValueApplier<T> valueApplier;
 
-    public PropertySliderWidget(int x, int y, int width, int height, Text prefix, double value, Property<T> property, ValueTextGetter<T> textGetter, PropertyValueApplier<T> valueApplier) {
+    public PropertySliderWidget(int x, int y, int width, int height, Component prefix, double value, Property<T> property, ValueTextGetter<T> textGetter, PropertyValueApplier<T> valueApplier) {
         super(x, y, width, height, textGetter.toText(prefix, property.getValue()), value);
         this.prefix = prefix;
         this.property = property;
@@ -24,15 +24,20 @@ public class PropertySliderWidget<T extends Number> extends SliderWidget {
         setMessage(textGetter.toText(prefix, property.getValue()));
     }
 
+    @Override
+    protected void applyValue() {
+        this.property.setValue(this.valueApplier.applyValue(this.value));
+    }
+
     public interface ValueTextGetter<T extends Number> {
-        Text toText(Text prefix, T value);
+        Component toText(Component prefix, T value);
 
         static <T extends Number> ValueTextGetter<T> getDefaultTextGetter() {
-            return (prefix1, value1) -> GameOptions.getGenericValueText(prefix1, Text.of(value1.toString()));
+            return (prefix, value) -> Options.genericValueLabel(prefix, Component.literal(value.toString()));
         }
 
         static ValueTextGetter<Double> getDefaultPercentTextGetter() {
-            return (prefix1, value1) -> Text.translatable("options.percent_value", prefix1, (int)(value1 * 100.0));
+            return (prefix, value) -> Component.translatable("options.percent_value", prefix, (int) Math.round(value * 100.0));
         }
     }
 
@@ -40,16 +45,11 @@ public class PropertySliderWidget<T extends Number> extends SliderWidget {
         T applyValue(double value);
 
         static PropertyValueApplier<Double> getDefaultDoublePropertyValueApplier(double min, double max) {
-            return value1 -> min + (max - min) * value1;
+            return value -> min + (max - min) * value;
         }
 
         static PropertyValueApplier<Integer> getDefaultIntegerPropertyValueApplier(int min, int max) {
-            return value1 -> (int) (min + (max - min) * value1);
+            return value -> (int) Math.round(min + (max - min) * value);
         }
-    }
-
-    @Override
-    protected void applyValue() {
-        this.property.setValue(this.valueApplier.applyValue(this.value));
     }
 }

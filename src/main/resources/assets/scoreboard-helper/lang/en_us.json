@@ -1,5 +1,5 @@
 {
-  "category.scoreboard-helper": "Scoreboard Helper",
+  "key.category.scoreboard-helper.main": "Scoreboard Helper",
   "commands.sbhelper.invalidCount": "The maximum count cannot be negative",
   "commands.sbhelper.success.setMaxCount": "Set max display count of scoreboard sidebar to %s",
   "hint.scoreboard-helper.export.fail.inactive": "The scoreboard sidebar doesn't display any scoreboard objective now",

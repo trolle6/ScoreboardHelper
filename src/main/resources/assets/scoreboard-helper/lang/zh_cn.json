@@ -1,5 +1,5 @@
 {
-  "category.scoreboard-helper": "Scoreboard Helper",
+  "key.category.scoreboard-helper.main": "Scoreboard Helper",
   "commands.sbhelper.invalidCount": "最大显示数量不能为负数",
   "commands.sbhelper.success.setMaxCount": "已设置记分板侧边栏最大显示数量为 %s",
   "hint.scoreboard-helper.export.fail.inactive": "记分板侧边栏目前未显示任何记分项",
